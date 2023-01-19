@@ -245,3 +245,5 @@ secrets.json
 .env.prod
 .env.prod.db
 .DS_Store
+.env.db
+.env.dev
