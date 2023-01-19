@@ -1,0 +1,73 @@
+version: "3"
+
+volumes:
+  mysql_data:
+
+services:
+  mysqldb:
+#    image: arm64v8/mysql:8.0.30
+    build: ./db
+    volumes:
+          - mysql_data:/var/lib/mysql
+    env_file:
+      - ./db/.env.db
+#    environment:
+#      MYSQL_DATABASE: "smtm"
+#      MYSQL_PASSWORD: "1234"
+#      MYSQL_ROOT_PASSWORD: "1234"
+#      MYSQL_USER: "user"
+
+
+    ports:
+      - "3306:3306"
+    container_name: mysqldb
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        DJANGO_ALLOWED_HOSTS: "*"
+        DJANGO_SECRET_KEY: "*"
+        DJANGO_CORS_ORIGIN_WHITELIST: "*"
+    command: gunicorn backend.wsgi --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/:/backend/
+    expose:
+      - "8000"
+    env_file:
+      - ./db/.env.dev
+    depends_on:
+      - mysqldb
+
+  frontend:
+    build:
+      context: ./frontend_repo
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    volumes:
+      - ./frontend/:/frontend
+      - ./frontend/node_modules/:/frontend/node_modules
+    environment:
+      - CI=true
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+      - NODE_ENV=development
+    tty: true
+
+#  frontend:
+#    build:
+#      context: ./frontend
+#    command: [ "npm", "start" ]
+#    ports:
+#      - "80:3000"
+#    volumes:
+#      - ./frontend/:/frontend
+#      - ./frontend/node_modules/:/frontend/node_modules
+#    environment:
+#      - CI=true
+#      - CHOKIDAR_USEPOLLING=true
+#      - REACT_APP_BACKEND_URL=http://localhost:8000
+#    tty: true
