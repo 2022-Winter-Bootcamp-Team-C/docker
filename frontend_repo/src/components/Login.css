@@ -1,0 +1,35 @@
+@font-face {
+	font-family: "LINE_Bd";
+	src: url("../assets/fonts/LINESeedKR-Bd.ttf");
+}
+  @font-face {
+	font-family: "LINE_Rg";
+	src: url("../assets/fonts/LINESeedKR-Rg.ttf");
+}
+  @font-face {
+	font-family: "LINE_Th";
+	src: url("../assets/fonts/LINESeedKR-Th.ttf");
+}
+.ml{
+    margin-top: 12%;
+}
+Form {
+    font-family: "LINE_Rg";
+    margin: 0 auto;
+    width: 350px;
+}
+
+.btn-primary.one, .btn-primary.two{
+    border-radius: 12px;
+    font-family: "LINE_Bd";
+    width: 350px;
+    margin-top: 10px;
+}
+h1{
+    height: 80px;
+    font-weight: 600;
+    font-size: 50px;
+    margin-left: 30%;
+    color:#2660FF;
+    font-family: "LINE_Bd";
+}
