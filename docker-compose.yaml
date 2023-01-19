@@ -29,7 +29,7 @@ services:
         DJANGO_ALLOWED_HOSTS: "*"
         DJANGO_SECRET_KEY: "*"
         DJANGO_CORS_ORIGIN_WHITELIST: "*"
-    command: gunicorn backend.wsgi --bind 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:

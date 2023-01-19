@@ -5,6 +5,7 @@ from django.contrib.messages.storage.cookie import MessageSerializer
 from django.contrib.sessions.models import Session
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -52,8 +53,7 @@ def login(request):  # A-2 로그인
     return Response(err_data, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['DELETE'])
-# @permission_classes([IsAuthenticated])  # 로그인 필요
+@api_view(['DELETE'])  # 로그인 필요
 def logout(request):  # A-3 로그아웃
     request.session.flush()
     return Response(status=status.HTTP_200_OK)
