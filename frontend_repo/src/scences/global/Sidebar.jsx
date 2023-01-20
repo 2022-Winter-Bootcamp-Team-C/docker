@@ -13,6 +13,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import LogoutIcon from '@mui/icons-material/Logout';
+import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -104,7 +105,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h5" color={colors.grey[100]}>
-                  SHOW me the money
+                  <b>SHOW</b> me the money
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -153,7 +154,7 @@ const Sidebar = () => {
               분석리포트
             </Typography>
             <Item
-              title="Bar Chart"
+              title="용도별 그래프"
               to="/bar"
               icon={<BarChartOutlinedIcon />}
               selected={selected}
@@ -162,14 +163,14 @@ const Sidebar = () => {
             <Item
               title="수입/지출 그래프"
               to="/pie"
-              icon={<TimelineOutlinedIcon />}
+              icon={<DataSaverOffIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="3개월 수입/지출 그래프"
               to="/line"
-              icon={<BarChartOutlinedIcon />}
+              icon={<TimelineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

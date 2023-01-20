@@ -2,29 +2,6 @@ import { tokens } from "../theme";
 
   
 
-// export const mockDataSpend = [
-//   {
-//     id: 1,
-//     date : "2021-12-12",
-//     purpose : "용도",
-//     memo : "메모",
-//     cost : 1212,
-//     image : "no"
-//   }
-// ];
-
-// export const mockDataInvoices = [
-//   {
-//     id: 1,
-//     date : "2021-12-12",
-//     purpose : "용도",
-//     memo : "메모",
-//     cost : 1212,
-//     image : "no"
-//   },
-
-// ];
-
 export const mockBarData = [
   {
     country: "AD",

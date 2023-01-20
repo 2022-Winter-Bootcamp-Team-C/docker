@@ -2,22 +2,26 @@ import json
 from math import trunc
 from multiprocessing import connection
 import datetime
+from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Spending
 from .serializers import spending_get_serializer, spending_get_totalcost_serializer, \
-    spending_delete_serializer, spending_post_serializer
+    spending_delete_serializer, spending_post_serializer, spending_put_serializer, post_spending_data_serializer
 from user.models import User
 
+from income.models import Income
 
-@api_view(['GET'])
+
+@api_view(['GET'])  #
 def get_spending_datas(request, user_id):
     try:
         bool(User.objects.get(user_id=user_id))
@@ -47,37 +51,41 @@ def get_spending_datas(request, user_id):
                         status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])  # B-2 지출 등록폼 입력 후 DB에 저장
-def post_spending_data(request):
-    if int(request.data['cost']) > 9999999:
-        return JsonResponse({'memssage': "금액은 최대 9,999,999원입니다."}
-                            , safe=False, status=status.HTTP_400_BAD_REQUEST)
-    reqData = request.data
-    serializer = spending_post_serializer(data=reqData)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['PUT', 'DELETE'])  # B-3 지출 내역 수정, B-4 지출 내역 삭제
-def put_delete_data(request, id):
-    data = Spending.objects.get(id=id)  # 앞의 id는 Spending 테이블의 칼럼, 뒤의 id는 요청 값으로 전달하는 id 의미
-    if data.is_deleted:
-        return JsonResponse({'memssage': "삭제된 지출 내역입니다."}
-                            , safe=False, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == 'PUT':
-        reqData = request.data  # reqData는 내가 수정을 원해서 서버에 전달하는 json데이터를 의미
-        serializer = spending_post_serializer(instance=data, data=reqData)
+class post_spending_data(APIView):  # B-2 지출 등록폼 입력 후 DB에 저장
+    @swagger_auto_schema(request_body=post_spending_data_serializer)
+    def post(self, request):
+        if int(request.data['cost']) > 9999999:
+            return JsonResponse({'memssage': "금액은 최대 9,999,999원입니다."}
+                                , safe=False, status=status.HTTP_400_BAD_REQUEST)
+        reqData = request.data
+        serializer = spending_post_serializer(data=reqData)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        delete_data = Spending.objects.filter(id=id, is_deleted=False)
-        delete_data.update(is_deleted=True)
-        return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class put_delete_data(APIView):  # B-3 지출 내역 수정, B-4 지출 내역 삭제
+    @swagger_auto_schema(request_body=post_spending_data_serializer)
+    def put(self, request, id):
+        data = Spending.objects.get(id=id)  # 앞의 id는 Spending 테이블의 칼럼, 뒤의 id는 요청 값으로 전달하는 id 의미
+        if data.is_deleted:
+            return JsonResponse({'memssage': "삭제된 지출 내역입니다."}
+                                , safe=False, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.method == 'PUT':
+            reqData = request.data  # reqData는 내가 수정을 원해서 서버에 전달하는 json데이터를 의미
+            serializer = spending_put_serializer(instance=data, data=reqData)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        if request.method == 'DELETE':
+            delete_data = Spending.objects.filter(id=id, is_deleted=False)
+            delete_data.update(is_deleted=True)
+            return Response(status=status.HTTP_202_ACCEPTED)
 
 
 @api_view(['GET'])  # D-1 용도별 지출 비율
@@ -157,7 +165,7 @@ def get_comparison_last_month(request, user_id):
                         status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])  # D-6 3개월 내 지출 총합
+@api_view(['GET'])  # D-6 3개월 전(10월) 지출 총합
 def get_three_month_ago_spending(request, user_id):
     three_month_ago_date = datetime.datetime.now() - relativedelta(months=3)
 
@@ -171,20 +179,103 @@ def get_three_month_ago_spending(request, user_id):
                         status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])  # D-7 3개월 내 지출 평균 조회
-def get_three_month_spending_average(request, user_id):
-    start_month = datetime.datetime.now() - relativedelta(months=3)
-    end_month = datetime.datetime.now() - relativedelta(months=1)
+@api_view(['GET'])  # D-7 금월 수입 지출 비율
+def get_spending_income_ratio_this_month(request, user_id):
+    this_month = datetime.datetime.now().month
 
-    three_month_spending = Spending.objects.filter(user_id=user_id
-                                                   , when__gte=start_month
-                                                   , when__lte=end_month)
+    this_month_spending = Spending.objects.filter(user_id=user_id, when__month=this_month, is_deleted=False)
+    total_spending = 0
+    for i in this_month_spending:
+        total_spending += i.cost
 
-    total_three_month_spending = 0
-    for i in three_month_spending:
-        total_three_month_spending += i.cost
+    this_month_income = Income.objects.filter(user_id=user_id, when__month=this_month, is_deleted=False)
+    total_income = 0
+    for i in this_month_income:
+        total_income += i.cost
 
-    three_month_spending_average = float(round(total_three_month_spending / 3, 1))
+    total_cost = total_income + total_spending
 
-    return JsonResponse({'three_month_spending_average': format(three_month_spending_average, ',')}, safe=False,
+    income_ratio = round((total_income / total_cost) * 100, 1)
+    spending_ratio = round((total_spending / total_cost) * 100, 1)
+
+    return JsonResponse({'income_ratio': income_ratio, 'spending_ratio': spending_ratio}, safe=False,
                         status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])  # D-8 최근 3개월(10, 11, 12) 각 총 수입 지출 조회, 3개월 지출 , 수입 평균 조회
+def get_spending_income_ratio_3month(request, user_id):
+    last_month_ago = datetime.datetime.now() - relativedelta(months=1)
+    two_month_ago = datetime.datetime.now() - relativedelta(months=2)
+    three_month_ago = datetime.datetime.now() - relativedelta(months=3)
+
+    last_month_ago_spending = Spending.objects.filter(user_id=user_id, when__month=last_month_ago.month,
+                                                      is_deleted=False)
+    last_month_ago_total_spending = 0
+    for i in last_month_ago_spending:
+        last_month_ago_total_spending += i.cost
+
+    last_month_ago_income = Income.objects.filter(user_id=user_id, when__month=last_month_ago.month, is_deleted=False)
+    last_month_ago_total_income = 0
+    for i in last_month_ago_income:
+        last_month_ago_total_income += i.cost
+
+    # last_month_ago_total_cost = last_month_ago_total_income + last_month_ago_total_spending
+
+    two_month_ago_spending = Spending.objects.filter(user_id=user_id, when__month=two_month_ago.month, is_deleted=False)
+    two_month_ago_total_spending = 0
+    for i in two_month_ago_spending:
+        two_month_ago_total_spending += i.cost
+
+    two_month_ago_income = Income.objects.filter(user_id=user_id, when__month=two_month_ago.month, is_deleted=False)
+    two_month_ago_total_income = 0
+    for i in two_month_ago_income:
+        two_month_ago_total_income += i.cost
+
+    # two_month_ago_total_cost = two_month_ago_total_income + two_month_ago_total_spending
+
+    three_month_ago_spending = Spending.objects.filter(user_id=user_id, when__month=three_month_ago.month,
+                                                       is_deleted=False)
+    three_month_ago_total_spending = 0
+    for i in three_month_ago_spending:
+        three_month_ago_total_spending += i.cost
+
+    three_month_ago_income = Income.objects.filter(user_id=user_id, when__month=three_month_ago.month, is_deleted=False)
+    three_month_ago_total_income = 0
+    for i in three_month_ago_income:
+        three_month_ago_total_income += i.cost
+
+    three_month_spending_avg = Decimal.from_float(float((last_month_ago_total_spending
+                                                         + two_month_ago_total_spending
+                                                         + three_month_ago_total_spending) / 3))
+
+    three_month_income_avg = round(Decimal.from_float(float((last_month_ago_total_income
+                                                       + two_month_ago_total_income
+                                                       + three_month_ago_total_income) / 3)), 1)
+
+    return JsonResponse({'last_month_ago_total_income': last_month_ago_total_income,
+                         'last_month_ago_total_spending': last_month_ago_total_spending,
+                         'two_month_ago_total_income': two_month_ago_total_income,
+                         'two_month_ago_total_spending': two_month_ago_total_spending,
+                         'three_month_ago_total_income': three_month_ago_total_income,
+                         'three_month_ago_total_spending': three_month_ago_total_spending,
+                         'three_month_spending_avg': three_month_spending_avg,
+                         'three_month_income_avg': three_month_income_avg}, safe=False,
+                        status=status.HTTP_200_OK)
+
+# @api_view(['GET'])  # D-7 3개월 내 지출 평균 조회
+# def get_three_month_spending_average(request, user_id):
+#     start_month = datetime.datetime.now() - relativedelta(months=3)
+#     end_month = datetime.datetime.now() - relativedelta(months=1)
+#
+#     three_month_spending = Spending.objects.filter(user_id=user_id
+#                                                    , when__gte=start_month
+#                                                    , when__lte=end_month)
+#
+#     total_three_month_spending = 0
+#     for i in three_month_spending:
+#         total_three_month_spending += i.cost
+#
+#     three_month_spending_average = float(round(total_three_month_spending / 3, 1))
+#
+#     return JsonResponse({'three_month_spending_average': format(three_month_spending_average, ',')}, safe=False,
+#                         status=status.HTTP_200_OK)

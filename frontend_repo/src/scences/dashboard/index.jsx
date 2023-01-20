@@ -6,7 +6,7 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
+import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import Sidebar from '../global/Sidebar';
@@ -17,13 +17,51 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
   const [isSidebar, setIsSidebar] = useState(true);
   const [data, setData] = useState([]);
+  const [incomedata, setIncomeData] = useState([]);
+  const [totaldata, setTotalData] = useState([]);
+  const [threespenddata,setThreeSpendTotalData] = useState([]);
+  const [threeincomedata,setThreeIncomeTotalData] = useState([]);
+  const user_id = localStorage.getItem("user_id")
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/v1/spending/total_spending/3e6eb5ec067f4d39ad6f4165bcec8386')
+    const spend = ()=> {
+    axios.get(`http://127.0.0.1:8000/api/v1/spending/total_spending/${user_id}`)
       .then(response => {
         setData(response.data)
       })
+    }
+    const income = ()=> {
+      axios.get(`http://127.0.0.1:8000/api/v1/income/total_income/${user_id}`)
+      .then(response => {
+        setIncomeData(response.data)
+        console.log(response.data)
+      })
+    }
+    const month_spend = () => {
+      axios.get(`http://127.0.0.1:8000/api/v1/spending/comparison_last_month/${user_id}`)
+      .then(response => {
+        setTotalData(response.data)
+      })
+    }
+    const three_month_spend = () => {
+      axios.get(`http://127.0.0.1:8000/api/v1/spending/3month_sum/${user_id}`)
+      .then(response => {
+        setThreeSpendTotalData(response.data)
+      })
+    }
+    const three_month_income = () => {
+      axios.get(`http://127.0.0.1:8000/api/v1/income/3month_sum/${user_id}`)
+      .then(response => {
+        setThreeIncomeTotalData(response.data)
+      })
+    }
+    spend()
+    income()
+    month_spend()
+    three_month_spend()
+    three_month_income()
   }, [])
+
 
   return (
     <div className="app">
@@ -55,7 +93,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
+            title= {incomedata.total_income+"원"}
             subtitle="수입"
             progress="0.75"
             icon={
@@ -74,7 +112,7 @@ const Dashboard = () => {
         >
           
           <StatBox
-            title = {data.total_spending}
+            title = {data.total_spending+"원"}
             subtitle="지출"
             progress="0.50"
             icon={
@@ -92,7 +130,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
+            title = {threeincomedata.total_three_month_ago_income+"원"}
             subtitle="3개월 전 수입"
             progress="0.30"
             icon={
@@ -110,7 +148,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="1,325,134"
+            title={threespenddata.total_three_month_ago_spending+"원"}
             subtitle="3개월 전 지출"
             progress="0.80"
             icon={
@@ -135,16 +173,9 @@ const Dashboard = () => {
             alignItems="center"
           >
 
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
-            </Box>
           </Box>
-          <Box height="250px" m="-20px 0 0 0">
-            <LineChart isDashboard={true} />
+          <Box height="280px" m="-37px 0 0 70px">
+            <BarChart isDashboard={true} />
           </Box>
         </Box>
        
@@ -171,15 +202,12 @@ const Dashboard = () => {
               color={colors.greenAccent[500]}
               sx={{ mt: "15px" }}
             >
-              전달보다 40,000원 덜 소비 하셨어요!
+              전달보다 <b>{totaldata.comparison_total_spending}</b>원 덜 소비 하셨어요!
             </Typography>
             <Typography>소비를 덜 하고싶다면 챌린지 참여해보세요 </Typography>
           </Box>
-          
         </Box>
-        
       </Box>
-      
     </Box>
     </div>
     </div>
