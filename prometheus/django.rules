@@ -102,4 +102,5 @@ groups:
   - record: job:django_migrations_applied_total:max
     expr: max(django_migrations_applied_total) BY (job, connection)
   - record: job:django_migrations_unapplied_total:max
-    expr: max(django_migrations_unapplied_total) BY (job, connection)d
+    expr: max(django_migrations_unapplied_total) BY (job, connection)
+
