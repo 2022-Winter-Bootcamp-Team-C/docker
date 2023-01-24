@@ -62,34 +62,107 @@ services:
       - backend
       - frontend
 
+#  prometheus:
+#    image: prom/prometheus:latest
+#    container_name: prometheus
+#    volumes:
+#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - "9090:9090"
+#    command:
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#      - '--web.console.templates=/etc/prometheus/consoles/'
+#      - '--web.console.libraries=/etc/prometheus/console_libraries/'
+#      - '--storage.tsdb.path=/prometheus'
+#      - '--storage.tsdb.retention.time=200h' # 200시간보다 오래된 metrics는 삭제
+#      - '--storage.tsdb.retention.size=5GB' # 5GB를 넘을 시 오래된 metrics 삭제
+#    restart: always
+
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
-    volumes:
-      - ./prometheus/:/etc/prometheus/
     ports:
       - "9090:9090"
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml' 
-      - '--web.console.templates=/etc/prometheus/consoles/'
-      - '--web.console.libraries=/etc/prometheus/console_libraries/'
-    restart: always
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - cadvisor
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    restart: unless-stopped
+    expose:
+      - "9101"
+    ports:
+      - "9101:9101"
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    restart: unless-stopped
+    links:
+      - prometheus:prometheus
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
     environment:
-      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
-    volumes:
-      - grafana_data:/var/lib/grafana
-    ports:
-      - "3001:3000"
-    depends_on:
-      - prometheus
-    restart: always
+
+
+
+#  grafana:
+#    image: grafana/grafana:latest
+#    container_name: grafana
+#    environment:
+#      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+#      GF_AUTH_ANONYMOUS_ENABLED: "true"
+#      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+#      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+#      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+#    ports:
+#      - "3001:3000"
+#    depends_on:
+#      - prometheus
+#    expose:
+#      - "3001"
+#    restart: always
+
+
+#  cadvisor:
+#    image: gcr.io/cadvisor/cadvisor:v0.45.0
+#    container_name: cadvisor
+#    privileged: true
+#    devices:
+#      - /dev/kmsg:/dev/kmsg
+#    volumes:
+#      - /:/rootfs:ro
+#      - /var/run:/var/run:ro
+#      - /sys:/sys:ro
+#      - /var/lib/docker:/var/lib/docker:ro
+#      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+#    restart: unless-stopped
+#    expose:
+#      - "8080"
 
 volumes:
   mysql_data:
