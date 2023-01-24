@@ -1,0 +1,22 @@
+name: Deploy CD
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Deploy to server
+      # don't run locally
+        if: ${{ !env.ACT }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_SSH_HOST }}
+          username: ${{ secrets.AWS_SSH_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: ${{ secrets.AWS_SSH_PORT }}
+          script: |
+            cd docker
+            git pull https://github.com/2022-Winter-Bootcamp-Team-C/docker.git
+            docker-compose down 
+            docker-compose up --build -d
