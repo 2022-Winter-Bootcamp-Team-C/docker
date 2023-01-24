@@ -10,7 +10,6 @@ services:
           - mysql_data:/var/lib/mysql
     env_file:
       - ./db/.env.db
-
     ports:
       - "3306:3306"
     container_name: mysqldb
@@ -44,7 +43,7 @@ services:
     environment:
       - REACT_APP_BACKEND_URL=http://localhost
     ports:
-      - 3000:3000
+      - "3000:3000"
     volumes:
       - ./frontend/:/frontend
       - build_folder:/frontend/build
@@ -63,8 +62,38 @@ services:
       - backend
       - frontend
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml' 
+      - '--web.console.templates=/etc/prometheus/consoles/'
+      - '--web.console.libraries=/etc/prometheus/console_libraries/'
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+    restart: always
+
 volumes:
   mysql_data:
   static_volume:
   media_volume:
   build_folder:
+  grafana_data:
