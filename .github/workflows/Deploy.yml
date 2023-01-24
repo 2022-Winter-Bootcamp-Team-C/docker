@@ -16,6 +16,7 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           app_port: ${{ secrets.AWS_SSH_PORT }}
           script: |
+            ls -a
             cd docker
             git pull https://github.com/2022-Winter-Bootcamp-Team-C/docker.git
             docker-compose down 
