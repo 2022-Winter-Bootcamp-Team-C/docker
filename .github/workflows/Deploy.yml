@@ -1,0 +1,23 @@
+name: React build apple
+
+on: 
+  push:            
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy
+        uses: appleboy/ssh-action@master     
+        with:
+          host: ${{ secrets.HOST }}          
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            whoami
+            git pull origin master
