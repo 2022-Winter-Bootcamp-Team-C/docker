@@ -86,7 +86,12 @@ CORS_ALLOWED_ORIGINS = [
 
 ]
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    '.smtm.kr',
+    '.teamc.smtm.kr',
+    'ec2-3-35-44-232.ap-northeast-2.compute.amazonaws.com'
+    
+]
 
 ROOT_URLCONF = 'backend.urls'
 
