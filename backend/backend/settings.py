@@ -83,15 +83,9 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000"
-
 ]
 
-ALLOWED_HOSTS = [
-    '.smtm.kr',
-    '.teamc.smtm.kr',
-    'ec2-3-35-44-232.ap-northeast-2.compute.amazonaws.com'
-    
-]
+ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'backend.urls'
 
