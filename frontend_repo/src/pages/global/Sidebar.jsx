@@ -39,14 +39,9 @@ const logout = () => {
 }
 const LItem = ({ title,  icon, selected, setSelected }) => {
   const navigate = useNavigate(); 
-  // const logoutTheme = useTheme();
-  // const logoutColors = tokens(theme.palette.mode);
+
   return (
     <MenuItem
-      // active={selected === title}
-      // style={{
-      //   color: colors.grey[100],
-      // }}
       onClick={() => {
         setSelected(title);
         logout();
@@ -88,7 +83,6 @@ const Sidebar = () => {
     >
       <ProSidebar collapsed={isCollapsed}>
         <Menu iconShape="square">
-          {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
@@ -194,7 +188,6 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-            
             </Typography>
             <LItem
               title="로그아웃"

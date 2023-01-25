@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import Header from "../../components/Header";
-import BarChart from "../../components/BarChart";
+import LineChart from "../../components/LineChart";
 import Sidebar from '../global/Sidebar';
 import Topbar from '../global/Topbar';
 import { useState } from "react";
 
-const Bar = () => {
+const Line = () => {
   let today = new Date();  
   let year = today.getFullYear(); // 년도
   let month = today.getMonth() + 1;  // 월
@@ -19,9 +19,9 @@ const Bar = () => {
     </main>
     <div className="size">
     <Box m="20px">
-      <Header title="용도별 지출 그래프" subtitle={(year + '년 '+ month + '월')} />
-      <Box height="75vh" width="75vw" margin="20px">
-        <BarChart />
+      <Header title="3개월 수입/지출 그래프" subtitle={(year + '년 '+ month + '월, ' + month+1+ '월, ' + month+2+ '월')}  />
+      <Box height="70vh" width="76vw" margin="20px">
+        <LineChart />
       </Box>
     </Box>
     </div>
@@ -29,4 +29,4 @@ const Bar = () => {
   );
 };
 
-export default Bar;
+export default Line;

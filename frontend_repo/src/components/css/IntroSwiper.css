@@ -1,14 +1,14 @@
 @font-face {
     font-family: 'LINE_Bd';
-    src: url("../assets/fonts/LINESeedKR-Bd.ttf");
+    src: url("../../assets/fonts/LINESeedKR-Bd.ttf");
 }
 @font-face {
     font-family: 'LINE_Rg';
-    src: url("../assets/fonts/LINESeedKR-Rg.ttf");
+    src: url("../../assets/fonts/LINESeedKR-Rg.ttf");
 }
 @font-face {
     font-family: 'LINE_Th';
-    src: url("../assets/fonts/LINESeedKR-Th.ttf");
+    src: url("../../assets/fonts/LINESeedKR-Th.ttf");
 }
 
 .intro{

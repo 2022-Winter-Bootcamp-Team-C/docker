@@ -3,7 +3,7 @@ import LoginButton from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
-import './Login.css';
+import "../components/css/Login.css"
 import axios from 'axios';
 
 
@@ -17,35 +17,6 @@ const Login = () => {
   };
 
   const checkUser = () => {
-    // if(email === "" || password === ""){
-    //   alert("아이디와 비밀번호를 입력해주세요!");
-    //   return;
-    // }
-    // axios('http://127.0.0.1:8000/api/v1/user/login',{
-    //   method : 'POST',
-    //   headers : {
-    //     'Content-Type' : 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     email: email,
-    //     password: password,
-    //   }),
-    // })
- 
-    // .then((response)=> {
-    //   console.log("로그인 성공!");
-    //   alert("로그인을 환영합니다!");
-  
-    //   setTimeout(()=> {
-    //     navigate("/");
-    //   }, 1000);
-    // })
-    // .catch(function(error) {
-    //   console.log("로그인 실패!");
-    //   console.log(error);
-    // });
-    // }
-
     axios.post('http://127.0.0.1:8000/api/v1/user/login/',
     {
       email: email,
@@ -57,7 +28,7 @@ const Login = () => {
       console.log(response.data)
       localStorage.clear()
       localStorage.setItem('user_id', response.data.user_id)
-            // window.location.replace('http://localhost:3000/dashboard')
+      localStorage.setItem('email', response.data.email)
             setTimeout(()=> {
               navigate("/dashboard");
             }, 1000);
@@ -68,7 +39,6 @@ const Login = () => {
     console.log(error);
     });
   }
-
 
   return (
 
@@ -81,7 +51,6 @@ const Login = () => {
         <Form.Text className="text-muted">
         </Form.Text>
       </Form.Group>
-      
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>비밀번호</Form.Label>
@@ -89,8 +58,6 @@ const Login = () => {
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckbox">
       </Form.Group>
-      
-
       
       <LoginButton variant="primary one" onClick={checkUser}>로그인</LoginButton>{' '}
       <LoginButton variant="primary two" onClick={navigateToSignup}>회원가입</LoginButton>{' '}

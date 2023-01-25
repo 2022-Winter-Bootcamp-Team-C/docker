@@ -10,8 +10,7 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
-
-import { Bar, Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 ChartJS.register(
     CategoryScale,
@@ -23,6 +22,7 @@ ChartJS.register(
     Tooltip,
     Legend
   );
+
 const options = {
     responsive: true,
     plugins: {
@@ -34,12 +34,42 @@ const options = {
         text: '3개월 내 수입/지출',
       }
     },
+
     scales: {
-      x: {
-        display: true,
-        offset: true,
+      y: { // [y 축 관련 설정] 
+        // min: 0, 
+        // max: 30,
+        grid: { // [y 축 데이터 시트 배경 선색 표시]
+          drawBorder: false,
+          color: function() {
+              return '#D3D3D3'; 
+          }
+        },
+        
+        ticks: {
+          color: '#D3D3D3',
+          font: {
+            color : '#D3D3D3'
+          } 
+        }
       },
-    },
+      x: { 
+        display: true,
+        offset: true,// [x 축 관련 설정] 
+        ticks: {
+          color: '#808080', 
+          font: { 
+            color : '#D3D3D3'
+          } 
+        },
+        grid: { // [y 축 데이터 시트 배경 선색 표시]
+          drawBorder: false,
+          color: function() {
+              return '#D3D3D3'; 
+          }
+        },
+      }
+    }    				
   };
 
 const LineChart =() => {
@@ -180,7 +210,7 @@ const LineChart =() => {
     },[])
    
     return(
-        <div style={{width:'83%', height:'70%',margin: '20px'}}>
+        <div style={{width:'89%', height:'70%',margin: '20px'}}>
             <Bar data={data} options={options}/>
          </div>)
 }

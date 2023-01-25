@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'LINE_Bd';
+    src: url("../../assets/fonts/LINESeedKR-Bd.ttf");
+}
+@font-face {
+    font-family: 'LINE_Rg';
+    src: url("../../assets/fonts/LINESeedKR-Rg.ttf");
+}
+@font-face {
+    font-family: 'LINE_Th';
+    src: url("../../assets/fonts/LINESeedKR-Th.ttf");
+}
 .sub-one {
     margin-left : 2%;
     width : 500px;
@@ -9,18 +21,21 @@
     margin-left: 48%;
     margin-top: -15%;
     font-size: 2.5rem;
+    
 }
 .sub-three {
     position: absolute;
     margin-left: 48%;
     margin-top: -10%;
     font-size: 2.0rem;
+    font-family: "LINE_Bd";
 }
 .sub-four {
     position: absolute;
     margin-left: 48%;
     margin-top: -6%;
     font-size: 1.2rem;
+    font-family: "LINE_Rg";
 }
 .sub-five {
     position: absolute;
@@ -28,6 +43,7 @@
     margin-left: 48%;
     margin-top: 5%;
     font-size: 1.5rem;
+    font-family: "LINE_Rg";
 }
 .input-value {
     position: absolute;
@@ -50,13 +66,11 @@
 .budget{
     width: 32%;
     height: 30%;
-    background-color: #ffffff;
     font-size: 23px;
     text-align: center;
     padding-top: 30px;
-    margin-left: 34%;
-    margin-top : 10%;
-    border-radius: 10px;
-    border-style : 10px solid ;
-    border-color: #EBEBEB;
+    margin-left: 42%;
+    margin-top : 9%;
+    font-family: "LINE_Rg";
+    text-align: left;
 }

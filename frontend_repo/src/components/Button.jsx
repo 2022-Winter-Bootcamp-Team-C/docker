@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
-import "./Button.css"
+import "../components/css/Button.css"
 
 const Button = () => {
   const navigate = useNavigate();
@@ -8,7 +8,6 @@ const Button = () => {
     navigate("/login");
     
   };
-
     
   return (
     <div className='button_p'>

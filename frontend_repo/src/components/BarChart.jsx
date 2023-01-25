@@ -1,4 +1,6 @@
 import {useEffect, useState} from 'react';
+import { tokens } from "../theme";
+import { useTheme } from "@mui/material";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -17,7 +19,7 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
   );
 const options = {
     responsive: true,
@@ -28,12 +30,48 @@ const options = {
       title: {
         display: true,
         text: '용도별 지출',
+      },
+    },
+    scales: {
+      y: { // [y 축 관련 설정] 
+        // min: 0,
+        // max: 30,
+        grid: { // [y 축 데이터 시트 배경 선색 표시]
+          drawBorder: false,
+          color: function() {
+              return '#D3D3D3'; 
+          }
+        },
+        
+        ticks: {
+          color: '#D3D3D3',
+          font: {
+            color : '#D3D3D3'
+          } 
+        }
+      },
+      x: { // [x 축 관련 설정] 
+        ticks: {
+          color: '#808080',
+          font: { 
+            color : '#D3D3D3'
+          } 
+        },
+        grid: { // [y 축 데이터 시트 배경 선색 표시]
+          drawBorder: false,
+          color: function() {
+              return '#D3D3D3'; 
+          }
+        },
       }
     }
   };
-
+  
 const BarChart =() => {
-    const [data, setData] = useState({
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+    const [data, setData] = useState({  
+
         labels:['식사','술/유흥', '뷰티/미용', '교통/차량', '주거/통신'],
         datasets: [
           {
@@ -78,14 +116,14 @@ const BarChart =() => {
                 ],
               })
          }).catch(e => {
-                // console.log("error", e)
+                console.log("error", e)
             })
         }
         axiosData();
     },[])
    
     return(
-        <div style={{width:'83%', height:'70%', margin: '20px'}}>
+        <div style={{width:'85%', height:'70%', margin: '20px'}}>
             <Bar data={data} options={options}/>
          </div>)
 }

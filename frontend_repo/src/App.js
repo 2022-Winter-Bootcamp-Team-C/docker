@@ -1,20 +1,18 @@
-import { useState,useEffect} from "react";
-import { Routes, Route, useNavigate} from "react-router-dom";
-import Dashboard from "./scences/dashboard";
-import Income from "./scences/income";
-import Spending from "./scences/spending"
-import Bar from "./scences/bar";
-import Line from "./scences/line";
-import Pie from "./scences/pie";
-import Challenge from "./scences/challenge"
-import Index from './scences/intro'
+import { Routes, Route} from "react-router-dom";
+import Dashboard from "./pages/dashboard";
+import Income from "./pages/income";
+import Spending from "./pages/spending"
+import Bar from "./pages/bar";
+import Line from "./pages/line";
+import Pie from "./pages/pie";
+import Challenge from "./pages/challenge/challenge"
+import Index from './pages/intro'
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 
 function App() {
-  const navigate = useNavigate();
   const [theme, colorMode] = useMode();
 
   return (
@@ -23,9 +21,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          {/* <Sidebar isSidebar={isSidebar} /> */}
           <main className="content">
-            {/* <Topbar setIsSidebar={setIsSidebar} /> */}
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -38,8 +34,7 @@ function App() {
               <Route path="/line" element={<Line />} />
               <Route path="/challenge" element={<Challenge />} />
             </Routes>
-          </main>
-          
+          </main>      
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>

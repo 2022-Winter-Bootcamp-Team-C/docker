@@ -2,7 +2,6 @@ import { Box, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { useState, useEffect, useRef } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import axios from "axios";
 import Header from "../../components/Header";
@@ -11,6 +10,8 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Sidebar from '../global/Sidebar';
 import Topbar from '../global/Topbar';
+import IncomeAddModal from '../../components/IncomeAddModal'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Income = () => {
   
@@ -20,12 +21,14 @@ const Income = () => {
   let user_id = localStorage.getItem("user_id")
 
   const theme = useTheme();
+  const [row, setRow] = useState("");
   const colors = tokens(theme.palette.mode);
-  const [show, setShow] = useState(false);
   const [isSidebar, setIsSidebar] = useState(true);
+  const [editShow, setEditShow] = useState(false);
+
   const [list,setlist] = useState([]);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleEditClose = () => setEditShow(false);
+  const handleEditShow = () => setEditShow(true);
 
   const memoRef = useRef()
   const costRef = useRef()
@@ -37,27 +40,8 @@ const Income = () => {
       cost: "", 
   })
   
-  // 수입 내역 POST
-  function submit(e){
-    let user_id = localStorage.getItem("user_id")
-    axios.post('http://127.0.0.1:8000/api/v1/income/new/',{
-      user : user_id,
-      when: data.when,
-      memo: data.memo,
-      cost: data.cost
-    })
-      .then(res => {
-        memoRef.current.value = "";
-        costRef.current.value = "";
-        whenRef.current.value = "";
-        setlist([...list, ...res.data])
-      }) 
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
 
-  // 지출 내역 화면 출력
+  // 수입 내역 화면 출력
   function handle(e){
     const newdata = {...data}
     newdata[e.target.id] = e.target.value
@@ -65,7 +49,7 @@ const Income = () => {
     console.log(newdata)
   }
 
-  // 지출 내역 DELETE
+  // 수입 내역 DELETE
   const handleDelete = (id)=>{
     if(window.confirm("삭제를 원하시면 확인 버튼을 눌러주세요.")){
       axios.delete(`http://127.0.0.1:8000/api/v1/income/${id}`)
@@ -79,17 +63,19 @@ const Income = () => {
   }
 
 
-// 지출 내역 UPDATE
+ // 수입내역 UPDATE
   const handleEdit= (id) => {
-    axios.put(`http://127.0.0.1:8000/api/v1/income/${id}`)
+    axios.put(`http://127.0.0.1:8000/api/v1/income/${id}`,{
+      user : user_id,
+      when: data.when,
+      memo: data.memo,
+      cost: data.cost
+    })
       .then(res => {
-        console.log(res);
-        setData({
-          user : user_id,
-          when: data.date,
-          memo: data.memo,
-          cost: data.cost
-        })
+        memoRef.current.value = "";
+        costRef.current.value = "";
+        whenRef.current.value = "";
+        setlist([...list, ...res.data])
       }) 
       .catch(function (error) {
         console.log(error);
@@ -125,9 +111,9 @@ const Income = () => {
             <>
             <div className="button_postion">
                 <Button className = "ListEdit"
-                  onClick ={() => { handleEdit(); }}> 수정 </Button>
+                  onClick ={() => { setRow(id); handleEditShow(id); }}> 수정 </Button>
                 <Button className='ListDelete'
-                  onClick ={(e) => {
+                  onClick ={() => {
                     handleDelete(id);
                     window.location.reload()
                 }}> 삭제 </Button>
@@ -135,7 +121,6 @@ const Income = () => {
             </>
         )}
     }
-
   ];
   
   // 수입 내역 GET
@@ -190,6 +175,8 @@ const Income = () => {
         {`
           .btn.ListEdit {
             margin :10px;
+            background-color : #6870fa; 
+            border-color : #6870fa;
           }
           .button_postion{
             margin-left :30px;
@@ -223,13 +210,12 @@ const Income = () => {
           }
        `}
       </style>
-      <Button variant="primary main" onClick={handleShow}>
-            내역 추가
-      </Button>
-      
-      <Modal show={show} onHide={handleClose}>
+
+      <IncomeAddModal></IncomeAddModal>
+
+     <Modal show={editShow} onHide={handleEditClose}>
         <Modal.Header closeButton>
-          <Modal.Title>수입 내역 추가</Modal.Title>
+          <Modal.Title>수입 내역 수정</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -242,7 +228,7 @@ const Income = () => {
                 onChange={(e) => handle(e)}
                 id ="when"
                 value ={data.when}
-                method="post"
+                method="put"
               />
             </Form.Group>
             <Form.Group className="mb-3" >
@@ -255,35 +241,37 @@ const Income = () => {
                 onChange={(e) => handle(e)}
                 id ="memo"
                 value ={data.memo}
-                method="post"
+                method="put"
               />
             </Form.Group>
             <Form.Group className="mb-3" >
             <Form.Label>금액</Form.Label>
               <Form.Control
                 ref={costRef}
-                type="text"
+                type="number"
                 placeholder="금액을 입력하세요."
                 autoFocus
                 onChange={(e) => handle(e)}
                 id ="cost"
                 value ={data.cost}
-                method="post"
+                method="put"
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          
-          <Button variant="secondary center" onClick={handleClose}>
+          <Button variant="secondary center" onClick={handleEditClose}>
             닫기
           </Button>
+          
           <Button type="submit" variant="primary second"
            onClick={()=> {
-            handleClose();
-            submit();
+            handleEditClose();
+            handleEdit(row);         
             window.location.reload()
             }}> 확인 </Button>
+            
+          
         </Modal.Footer>
       </Modal>
         <DataGrid 
