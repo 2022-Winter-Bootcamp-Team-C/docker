@@ -247,3 +247,5 @@ secrets.json
 .DS_Store
 .env.db
 .env.dev
+
+*.log
