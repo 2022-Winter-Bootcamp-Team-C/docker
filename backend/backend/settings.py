@@ -9,7 +9,7 @@ pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-secret_file = os.path.join(BASE_DIR, 'secrets.json')  # secrets.json 파일 위치를 명시
+secret_file = os.path.join(BASE_DIR, 'secrets.json')  # secrets.json 파일 위치를 명시\
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
@@ -24,9 +24,6 @@ def get_secret(setting):
 
 OCR_SECRET_KEY = get_secret("SECRET_KEY")
 OCR_API_URL = get_secret("API_URL")
-
-OCR_SECRET_KEY = "SECRET_KEY"
-OCR_API_URL = "API_URL"
 
 DEBUG = True
 
@@ -58,6 +55,7 @@ INSTALLED_APPS = [
     'spending_challenge',
     'rest_framework',
     'drf_yasg',
+    'django_prometheus',
 ]
 
 REST_FRAMEWORK = {
@@ -70,6 +68,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,6 +77,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware'
 ]
 
 CORS_ALLOWED_ORIGINS = [

@@ -1,9 +1,6 @@
 import uuid
-
 from django.db import models
-
 from user.models import User
-
 
 class Spending(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False)  # PK
