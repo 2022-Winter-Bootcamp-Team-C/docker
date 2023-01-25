@@ -48,7 +48,6 @@ urlpatterns = [
     path('admin', admin.site.urls),
     path('api/', include(('sample_swagger.urls', 'api'))),
     path('api/v1/income/', include('income.urls')),
-    path('', include('django_prometheus.urls'))
 ]
 
 if settings.DEBUG:

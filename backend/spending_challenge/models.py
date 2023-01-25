@@ -1,6 +1,9 @@
 import uuid
+
 from django.db import models
+
 from user.models import User
+
 
 class Spending_challenge(models.Model):
     challenge_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False)  # PK

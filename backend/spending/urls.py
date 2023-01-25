@@ -1,12 +1,8 @@
 from django.template.defaulttags import url
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
 
 from . import views
 from .views import get_spending_datas, post_spending_data, put_delete_data
-
-# router = DefaultRouter()
-# router.register(r'posts', views.SpendingViewSet)
 
 urlpatterns = [
     path('spending-list/<user_id>', views.get_spending_datas),  # B-1
@@ -18,7 +14,4 @@ urlpatterns = [
     path('3month_sum/<user_id>', views.get_three_month_ago_spending),  # D-6
     path('spending_income_ratio/<user_id>', views.get_spending_income_ratio_this_month),  # D-7
     path('3month_spending_income_ratio/<user_id>', views.get_spending_income_ratio_3month),  # D-8
-    # path('', include(router.urls)),
-    # path('3month_avg/<user_id>', views.get_three_month_spending_average),
-    # path('spending-list/<user_id>', get_spending_datas.views),
 ]

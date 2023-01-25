@@ -16,18 +16,6 @@ class spending_post_serializer(ModelSerializer):
         fields = '__all__'
 
 
-class spending_get_totalcost_serializer(ModelSerializer):
-    class Meta:
-        model = Spending
-        fields = ['cost']
-
-
-class spending_delete_serializer(ModelSerializer):
-    class Meta:
-        model = Spending
-        fields = ['is_deleted']
-
-
 class spending_put_serializer(ModelSerializer):
     class Meta:
         model = Spending
