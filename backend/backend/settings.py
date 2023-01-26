@@ -36,7 +36,7 @@ env = environ.Env(
 environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1','localhost', 'smtm.kr', 'www.smtm.kr']
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,10 +82,10 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "http://www.smtm.kr",
+    "http://smtm.kr/"
 ]
-
-ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'backend.urls'
 

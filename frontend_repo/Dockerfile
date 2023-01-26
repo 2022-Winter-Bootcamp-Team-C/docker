@@ -1,4 +1,5 @@
 FROM node:16.6.2
+USER root
 
 # Create app directory
 WORKDIR /frontend

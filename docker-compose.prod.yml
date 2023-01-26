@@ -8,8 +8,12 @@ services:
     build: ./db
     volumes:
           - mysql_data:/var/lib/mysql
-    env_file:
-      - ./db/.env.db
+    environment:
+      MYSQL_DATABASE: "smtm"
+      MYSQL_PASSWORD: "1234"
+      MYSQL_ROOT_PASSWORD: "1234"
+    # env_file:
+    #   - ./db/.env.db
     ports:
       - "3306:3306"
     container_name: mysqldb
@@ -26,7 +30,7 @@ services:
       - "8000:8000"
     volumes:
       - static_volume:/backend/sltaticfies
-      - media_volume:/backend/mediafiles
+      -  media_volume:/backend/mediafiles
       - ./backend/:/backend/
     expose:
       - "8000"
@@ -41,7 +45,7 @@ services:
       args:
         API_URL: "*"
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost
+      - REACT_APP_BACKEND_URL=http://smtm.kr
     ports:
       - "3000:3000"
     volumes:
