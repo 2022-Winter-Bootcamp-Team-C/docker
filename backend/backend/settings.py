@@ -82,9 +82,11 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://www.smtm.kr",
-    "http://smtm.kr/"
+    "https://127.0.0.1:3000",
+    "https://www.smtm.kr",
+    "https://smtm.kr"
 ]
 
 ROOT_URLCONF = 'backend.urls'

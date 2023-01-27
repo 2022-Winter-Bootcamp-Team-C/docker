@@ -45,7 +45,7 @@ services:
       args:
         API_URL: "*"
     environment:
-      - REACT_APP_BACKEND_URL=http://smtm.kr
+      - REACT_APP_BACKEND_URL=https://www.smtm.kr
     ports:
       - "3000:3000"
     volumes:
