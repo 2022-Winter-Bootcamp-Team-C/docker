@@ -54,6 +54,9 @@ def get_spending_datas(request, user_id):
 class post_spending_data(APIView):  # B-2 지출 등록폼 입력 후 DB에 저장
     @swagger_auto_schema(request_body=post_spending_data_serializer)
     def post(self, request):
+        if int(request.data['cost']) < 0:
+            return JsonResponse({'memssage': "금액은 음수를 입력할 수 없습니다."}
+                                , safe=False, status=status.HTTP_400_BAD_REQUEST)
         if int(request.data['cost']) > 9999999:
             return JsonResponse({'memssage': "금액은 최대 9,999,999원입니다."}
                                 , safe=False, status=status.HTTP_400_BAD_REQUEST)
