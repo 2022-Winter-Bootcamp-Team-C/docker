@@ -32,12 +32,15 @@ const SpendingAddModal = () => {
   
     // 지출 내역 POST
     function submit(e){
-      axios.post('http://127.0.0.1:8000/api/v1/spending/new/',{
+      axios.post('https://www.smtm.kr/api/v1/spending/new/',{
         user : user_id,
         when: data.when,
         memo: data.memo,
         purpose: data.purpose,
         cost: data.cost
+      },
+      {
+        withCredentials: true,
       })
         .then(res => {
           memoRef.current.value = "";
@@ -70,9 +73,13 @@ const SpendingAddModal = () => {
       formData.append("files", file);
       axios({
         method: "post",
-        url: "http://127.0.0.1:8000/api/v1/ocr",
+        url: "https://www.smtm.kr/api/v1/ocr",
         data: formData
-      }).then(({ data }) => {
+      },
+      {
+        withCredentials: true,
+      })
+      .then(({ data }) => {
         console.log("성공! ", JSON.stringify(data));
         setData({
           user : user_id,
@@ -88,7 +95,10 @@ const SpendingAddModal = () => {
     // 지출 내역 GET
       useEffect(() => {
         const user_id = localStorage.getItem("user_id")
-        axios.get(`http://127.0.0.1:8000/api/v1/spending/spending-list/${user_id}`)
+        axios.get(`https://www.smtm.kr/api/v1/spending/spending-list/${user_id}`,
+        {
+          withCredentials: true,
+        })
         .then(res => {
           setlist(res.data.spending_list);
       })

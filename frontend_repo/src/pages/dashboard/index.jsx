@@ -28,32 +28,47 @@ const Dashboard = () => {
 
   useEffect(() => {
     const spend = ()=> {
-    axios.get(`http://127.0.0.1:8000/api/v1/spending/total_spending/${user_id}`)
+    axios.get(`https://www.smtm.kr/api/v1/spending/total_spending/${user_id}`,
+    {
+      withCredentials: true,
+    })
       .then(response => {
         setData(response.data)
       })
     }
     const income = ()=> {
-      axios.get(`http://127.0.0.1:8000/api/v1/income/total_income/${user_id}`)
+      axios.get(`https://www.smtm.kr/api/v1/income/total_income/${user_id}`,
+      {
+        withCredentials: true,
+      })
       .then(response => {
         setIncomeData(response.data)
         console.log(response.data)
       })
     }
     const month_spend = () => {
-      axios.get(`http://127.0.0.1:8000/api/v1/spending/comparison_last_month/${user_id}`)
+      axios.get(`https://www.smtm.kr/api/v1/spending/comparison_last_month/${user_id}`,
+      {
+        withCredentials: true,
+      })
       .then(response => {
         setTotalData(response.data)
       })
     }
     const three_month_spend = () => {
-      axios.get(`http://127.0.0.1:8000/api/v1/spending/3month_sum/${user_id}`)
+      axios.get(`https://www.smtm.kr/api/v1/spending/3month_sum/${user_id}`,
+      {
+        withCredentials: true,
+      })
       .then(response => {
         setThreeSpendTotalData(response.data)
       })
     }
     const three_month_income = () => {
-      axios.get(`http://127.0.0.1:8000/api/v1/income/3month_sum/${user_id}`)
+      axios.get(`https://www.smtm.kr/api/v1/income/3month_sum/${user_id}`,
+      {
+        withCredentials: true,
+      })
       .then(response => {
         setThreeIncomeTotalData(response.data)
       })

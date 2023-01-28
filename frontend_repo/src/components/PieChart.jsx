@@ -48,7 +48,10 @@ const PieChart =() => {
            const dataSet1 = [];
            const dataSet2 = [];
            
-         axios.get(`http://127.0.0.1:8000/api/v1/spending/spending_income_ratio/${user_id}`)
+         axios.get(`https://www.smtm.kr/api/v1/spending/spending_income_ratio/${user_id}`,
+         {
+           withCredentials: true,
+         })
          .then((res) => {
                 // console.log(res)
                     dataSet1.push(res.data.income_ratio)

@@ -80,15 +80,40 @@ MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusAfterMiddleware'
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-#     "https://localhost:3000",
-#     "http://127.0.0.1:3000",
-#     "https://127.0.0.1:3000",
-#     "https://www.smtm.kr",
-#     "https://smtm.kr"
-# ]
-CORS_ALLOWED_ORIGINS = ["*"] 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://127.0.0.1:3000",
+    "https://www.smtm.kr",
+    "http://www.smtm.kr",
+    "https://smtm.kr",
+    "http://smtm.kr",
+    "https://localhost:8000",
+]
+
+CORS_ALLOW_METHODS = (  #<-실제 요청에 허용되는 HTTP 동사 리스트
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+
+CORS_ORIGIN_ALLOW_ALL=True
 
 ROOT_URLCONF = 'backend.urls'
 

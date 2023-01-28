@@ -84,7 +84,10 @@ const BarChart =() => {
        const axiosData = ()=> {
            let user_id = localStorage.getItem("user_id")
            const dataSet1 = [];
-         axios.get(`http://127.0.0.1:8000/api/v1/spending/purpose_ration/${user_id}`)
+         axios.get(`https://www.smtm.kr/api/v1/spending/purpose_ration/${user_id}`,
+         {
+           withCredentials: true,
+         })
          .then((res) => {
                 // console.log(res)
                     dataSet1.push(res.data.food_rate)

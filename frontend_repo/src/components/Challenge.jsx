@@ -25,9 +25,12 @@ const Challenge = () => {
   })
 
   function totalsubmit(){
-    axios.post('http://127.0.0.1:8000/api/v1/spending_challenge/new/',{
+    axios.post('https://www.smtm.kr/api/v1/spending_challenge/new/',{
       user: user_id,
 	    budget : data.budget,
+    },
+    {
+      withCredentials: true,
     })
     .then(res => {
       budgetRef.current.value = "";
@@ -50,7 +53,10 @@ const Challenge = () => {
   // 지출 챌린지 내역 GET
   useEffect(() => {
     const user_id = localStorage.getItem("user_id")
-    axios.get(`http://127.0.0.1:8000/api/v1/spending_challenge/${user_id}`)
+    axios.get(`https://www.smtm.kr/api/v1/spending_challenge/${user_id}`,
+    {
+      withCredentials: true,
+    })
     .then(res => {
       setlist(res.data.remaining_budget);
       setBudget(res.data.budget)

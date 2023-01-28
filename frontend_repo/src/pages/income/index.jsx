@@ -52,7 +52,10 @@ const Income = () => {
   // 수입 내역 DELETE
   const handleDelete = (id)=>{
     if(window.confirm("삭제를 원하시면 확인 버튼을 눌러주세요.")){
-      axios.delete(`http://127.0.0.1:8000/api/v1/income/${id}`)
+      axios.delete(`https://www.smtm.kr/api/v1/income/${id}`,
+      {
+        withCredentials: true,
+      })
       .then(response => {
           console.log(response);
       })
@@ -65,11 +68,14 @@ const Income = () => {
 
  // 수입내역 UPDATE
   const handleEdit= (id) => {
-    axios.put(`http://127.0.0.1:8000/api/v1/income/${id}`,{
+    axios.put(`https://www.smtm.kr/api/v1/income/${id}`,{
       user : user_id,
       when: data.when,
       memo: data.memo,
       cost: data.cost
+    },
+    {
+      withCredentials: true,
     })
       .then(res => {
         memoRef.current.value = "";
@@ -126,7 +132,10 @@ const Income = () => {
   // 수입 내역 GET
   useEffect(() => {
     const user_id = localStorage.getItem("user_id")
-    axios.get(`http://127.0.0.1:8000/api/v1/income/income-list/${user_id}`)
+    axios.get(`https://www.smtm.kr/api/v1/income/income-list/${user_id}`,
+    {
+      withCredentials: true,
+    })
     .then(res => {
       setlist(res.data.income_list);
     })

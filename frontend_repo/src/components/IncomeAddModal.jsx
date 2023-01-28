@@ -26,11 +26,14 @@ const IncomeAddModal = () => {
   
   // 수입 내역 POST
   function submit(e){
-    axios.post('http://127.0.0.1:8000/api/v1/income/new/',{
+    axios.post('https://www.smtm.kr/api/v1/income/new/',{
       user : user_id,
       when: data.when,
       memo: data.memo,
       cost: data.cost
+    },
+    {
+      withCredentials: true,
     })
       .then(res => {
         memoRef.current.value = "";
@@ -54,7 +57,10 @@ const IncomeAddModal = () => {
   // 수입 내역 GET
   useEffect(() => {
     const user_id = localStorage.getItem("user_id")
-    axios.get(`http://127.0.0.1:8000/api/v1/income/income-list/${user_id}`)
+    axios.get(`https://www.smtm.kr/api/v1/income/income-list/${user_id}`,
+    {
+      withCredentials: true,
+    })
     .then(res => {
       setlist(res.data.income_list);
     })

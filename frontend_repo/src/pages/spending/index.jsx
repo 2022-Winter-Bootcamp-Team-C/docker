@@ -65,9 +65,13 @@ const Spending = () => {
     formData.append("files", file);
     axios({
       method: "post",
-      url: "http://127.0.0.1:8000/api/v1/ocr",
+      url: "https://www.smtm.kr/api/v1/ocr",
       data: formData
-    }).then(({ data }) => {
+    },
+    {
+      withCredentials: true,
+    })
+    .then(({ data }) => {
       console.log("성공! ", JSON.stringify(data));
       setData({
         user : user_id,
@@ -82,7 +86,10 @@ const Spending = () => {
   // 지출 내역 DELETE
   const handleDelete = (id)=>{
     if(window.confirm("삭제를 원하시면 확인 버튼을 눌러주세요.")){
-      axios.delete(`http://127.0.0.1:8000/api/v1/spending/${id}`)
+      axios.delete(`https://www.smtm.kr/api/v1/spending/${id}`,
+      {
+        withCredentials: true,
+      })
       .then(response => {
           console.log(response);
       })
@@ -94,12 +101,15 @@ const Spending = () => {
 
   // 지출 내역 UPDATE
   const handleEdit= (id) => {
-    axios.put(`http://127.0.0.1:8000/api/v1/spending/${id}`,{
+    axios.put(`https://www.smtm.kr/api/v1/spending/${id}`,{
       user : user_id,
       when: data.when,
       memo: data.memo,
       purpose: data.purpose,
       cost: data.cost
+    },
+    {
+      withCredentials: true,
     })
       .then(res => {
         memoRef.current.value = "";
@@ -115,7 +125,10 @@ const Spending = () => {
    // 지출 내역 GET
     useEffect(() => {
       const user_id = localStorage.getItem("user_id")
-      axios.get(`http://127.0.0.1:8000/api/v1/spending/spending-list/${user_id}`)
+      axios.get(`https://www.smtm.kr/api/v1/spending/spending-list/${user_id}`,
+      {
+        withCredentials: true,
+      })
       .then(res => {
         setlist(res.data.spending_list);
     })

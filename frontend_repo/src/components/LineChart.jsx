@@ -7,14 +7,19 @@ import {
     BarElement,
     Title,
     PointElement,
+    LineController,
     Tooltip,
     Legend,
+    registerables
   } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
+
+ChartJS.register(...registerables);
 ChartJS.register(
     CategoryScale,
     LinearScale,
+    LineController,
     LineElement,
     PointElement,
     BarElement,
@@ -104,7 +109,10 @@ const LineChart =() => {
            const dataSet3 = [];
            const dataSet4 = [];
 
-         axios.get(`http://127.0.0.1:8000/api/v1/spending/3month_spending_income_ratio/${user_id}`)
+         axios.get(`https://www.smtm.kr/api/v1/spending/3month_spending_income_ratio/${user_id}`,
+         {
+           withCredentials: true,
+         })
          .then((res) => {
                 // console.log(res)
                     dataSet1.push(res.data.last_month_ago_total_income)

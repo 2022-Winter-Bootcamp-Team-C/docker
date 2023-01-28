@@ -13,10 +13,13 @@ function Signup(){
 
   const navigate = useNavigate();
   const register = () => {
-    axios.post('http://127.0.0.1:8000/api/v1/user/new/',
+    axios.post('https://www.smtm.kr/api/v1/user/new/',
     {
       email: email,
       password: password,
+    },
+    {
+      withCredentials: true,
     })
     .then(()=> {
       console.log("회원가입 성공!");
