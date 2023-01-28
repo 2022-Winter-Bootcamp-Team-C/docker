@@ -54,8 +54,8 @@ def get_income_list(request, user_id):
 class post_new_income(APIView):     # C-2 해당 유저 수입 등록
     @swagger_auto_schema(request_body=income_post_data_serializer)
     def post(self, request):
-        if int(request.data['cost']) > 9999999:
-            return JsonResponse({'memssage': "금액은 최대 9,999,999원입니다."}
+        if int(request.data['cost']) > 9999999 or int(request.data['cost']) < 0:
+            return JsonResponse({'memssage': "금액은 최대 9,999,999을 넘을 수 없거나 음수를 입력할 수 없습니다."}
                                 , safe=False, status=status.HTTP_400_BAD_REQUEST)
         serializer = post_income_serializer(data=request.data)
         if serializer.is_valid():
