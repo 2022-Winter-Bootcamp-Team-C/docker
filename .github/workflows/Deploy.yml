@@ -16,7 +16,7 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           script: |
             ls -a
-            git pull https://github.com/2022-Winter-Bootcamp-Team-C/docker.git
+            git clone https://github.com/2022-Winter-Bootcamp-Team-C/docker.git
             cd docker
             docker-compose down
             docker-compose -f docker-compose.prod.yml up -d --build
