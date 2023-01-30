@@ -95,7 +95,7 @@ def get_spending_rate_by_purpose(request, user_id):
             alcohol_cost += i.cost
         elif i.purpose == "주거/통신":
             mobile_cost += i.cost
-        elif i.purpose == "쇼핑":
+        elif i.purpose == "쇼핑/여가":
             shopping_cost += i.cost
         else:
             beauty_cost += i.cost
