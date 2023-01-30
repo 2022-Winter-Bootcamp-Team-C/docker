@@ -20,7 +20,7 @@ jobs:
             docker-compose -f docker-compose.prod.yml down -v
             docker-compose -f docker-compose.prod.yml up -d --build
             docker ps -a
-            docker-compose -f docker-compose.prod.yml -i exec backend python manage.py migrate
+            docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate
 #            git clone https://github.com/2022-Winter-Bootcamp-Team-C/docker.git
 #            docker-compose down
 #            export COMPOSE_INTERACTIVE_NO_CLI=1
