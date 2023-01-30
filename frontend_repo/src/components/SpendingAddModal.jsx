@@ -152,6 +152,7 @@ const SpendingAddModal = () => {
               method="post">
                 <option selected>용도를 선택하세요.</option>
                 <option value="식사">식사</option>
+                <option value="쇼핑/여가">쇼핑/여가</option>
                 <option value="술/유흥">술/유흥</option>
                 <option value="뷰티/미용">뷰티/미용</option>
                 <option value="교통/차량">교통/차량</option>
