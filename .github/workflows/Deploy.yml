@@ -15,15 +15,11 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: ${{ secrets.AWS_SSH_PORT }}
           script: |
-            ls -a
             cd docker
-            docker stop $(docker ps -a -q)
-            docker system prune --all --volumes
-            y
+            docker-compose -f docker-compose.prod.yml down -v
             docker-compose -f docker-compose.prod.yml up -d --build
             docker ps -a
             docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
-#            docker-compose -f docker-compose.prod.yml down -v
 #            git clone https://github.com/2022-Winter-Bootcamp-Team-C/docker.git
 #            docker-compose down
 
