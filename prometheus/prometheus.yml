@@ -13,8 +13,7 @@ scrape_configs:
   scrape_interval: 5s
   static_configs:
   - targets:
-    - www.smtm.kr:9090
+    - prometheus:9090
     - cadvisor:8080
     - node-exporter:9100
-    - www.smtm.kr:9090
     - backend:8000

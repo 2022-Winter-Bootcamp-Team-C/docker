@@ -36,7 +36,7 @@ env = environ.Env(
 environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
-ALLOWED_HOSTS = ['127.0.0.1','localhost', 'smtm.kr', 'www.smtm.kr']
+ALLOWED_HOSTS = ['127.0.0.1','localhost', 'smtm.kr', 'www.smtm.kr', 'backend']
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,7 +89,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://www.smtm.kr",
     "https://smtm.kr",
     "http://smtm.kr",
-    "https://localhost:8000",
+    "https://localhost:8000"
 ]
 
 CORS_ALLOW_METHODS = (  #<-실제 요청에 허용되는 HTTP 동사 리스트

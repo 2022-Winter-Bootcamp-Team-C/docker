@@ -38,6 +38,7 @@ services:
       - ./db/.env.prod
     depends_on:
       - mysqldb
+    container_name: backend
 
   frontend:
     build:
@@ -107,8 +108,9 @@ services:
       - prometheus:prometheus
     ports:
       - "3001:3000"
+    user: "1000:1000"
     volumes:
-      - ./data/grafana:/var/lib/grafana
+      - ./data1/grafana:/var/lib/grafana
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
