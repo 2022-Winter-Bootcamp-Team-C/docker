@@ -90,12 +90,14 @@ const Challenge = () => {
       noValidate
       autoComplete="off">
 
+        
       <FormControl 
         fullWidth sx={{ mt: 12}}>
           <InputLabel htmlFor="outlined-adornment-amount">금액</InputLabel>
           <OutlinedInput
             id="budget"
             type="number"
+            inputProps={{step:1000}}
             autoFocus
             onChange={(e) => handle(e)}
             value ={data.budget}
