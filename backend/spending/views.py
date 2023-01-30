@@ -171,33 +171,40 @@ def get_spending_income_ratio_this_month(request, user_id):
 
 @api_view(['GET'])  # D-8 최근 3개월(10, 11, 12) 각 총 수입 지출 조회, 3개월 지출 , 수입 평균 조회
 def get_spending_income_ratio_3month(request, user_id):
-    last_month_ago_spending = Spending.objects.filter(user_id=user_id, when__month=last_month_ago.month,
-                                                      is_deleted=False)
-    last_month_ago_total_spending = total_calculation(last_month_ago_spending)
+    last_month_ago_total_spending = two_month_ago_total_spending = three_month_ago_total_spending = 0
+    last_month_ago_total_income = two_month_ago_total_income = three_month_ago_total_income = 0
 
-    last_month_ago_income = Income.objects.filter(user_id=user_id, when__month=last_month_ago.month, is_deleted=False)
-    last_month_ago_total_income = total_calculation(last_month_ago_income)
+    total_spending = Spending.objects.filter(user_id=user_id
+                                             , when__month__gte=three_month_ago.month
+                                             , when__month__lte=last_month_ago.month)
 
-    two_month_ago_spending = Spending.objects.filter(user_id=user_id, when__month=two_month_ago.month, is_deleted=False)
-    two_month_ago_total_spending = total_calculation(two_month_ago_spending)
+    for i in total_spending:
+        if i.when.month == last_month_ago.month:
+            last_month_ago_total_spending += i.cost
+        elif i.when.month == two_month_ago.month:
+            two_month_ago_total_spending += i.cost
+        else:
+            three_month_ago_total_spending += i.cost
 
-    two_month_ago_income = Income.objects.filter(user_id=user_id, when__month=two_month_ago.month, is_deleted=False)
-    two_month_ago_total_income = total_calculation(two_month_ago_income)
+    total_income = Income.objects.filter(user_id=user_id
+                                         , when__month__gte=three_month_ago.month
+                                         , when__month__lte=last_month_ago.month)
 
-    three_month_ago_spending = Spending.objects.filter(user_id=user_id, when__month=three_month_ago.month,
-                                                       is_deleted=False)
-    three_month_ago_total_spending = total_calculation(three_month_ago_spending)
-
-    three_month_ago_income = Income.objects.filter(user_id=user_id, when__month=three_month_ago.month, is_deleted=False)
-    three_month_ago_total_income = total_calculation(three_month_ago_income)
+    for i in total_income:
+        if i.when.month == last_month_ago.month:
+            last_month_ago_total_income += i.cost
+        elif i.when.month == two_month_ago.month:
+            two_month_ago_total_income += i.cost
+        else:
+            three_month_ago_total_income += i.cost
 
     three_month_spending_avg = Decimal.from_float(float((last_month_ago_total_spending
                                                          + two_month_ago_total_spending
                                                          + three_month_ago_total_spending) / 3))
 
-    three_month_income_avg = round(Decimal.from_float(float((last_month_ago_total_income
-                                                             + two_month_ago_total_income
-                                                             + three_month_ago_total_income) / 3)), 1)
+    three_month_income_avg = Decimal.from_float(float((last_month_ago_total_income
+                                                       + two_month_ago_total_income
+                                                       + three_month_ago_total_income) / 3))
 
     return JsonResponse({'last_month_ago_total_income': last_month_ago_total_income,
                          'last_month_ago_total_spending': last_month_ago_total_spending,
