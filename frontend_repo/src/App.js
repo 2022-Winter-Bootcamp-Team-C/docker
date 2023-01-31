@@ -1,4 +1,5 @@
-import { Routes, Route} from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Income from "./pages/income";
 import Spending from "./pages/spending"
@@ -11,12 +12,17 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import ReactGA from 'react-ga';
+
+const TRACKING_ID = "UA-255883506-1"; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
 
 function App() {
   const [theme, colorMode] = useMode();
-
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
   return (
-    
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
