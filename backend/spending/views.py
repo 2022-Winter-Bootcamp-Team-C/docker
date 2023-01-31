@@ -1,6 +1,7 @@
 import datetime
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
+from django.db.models import Q
 from django.http import JsonResponse
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
@@ -95,7 +96,7 @@ def get_spending_rate_by_purpose(request, user_id):
             alcohol_cost += i.cost
         elif i.purpose == "주거/통신":
             mobile_cost += i.cost
-        elif i.purpose == "쇼핑/여가":
+        elif i.purpose == "쇼핑":
             shopping_cost += i.cost
         else:
             beauty_cost += i.cost
@@ -130,11 +131,18 @@ def get_spending_this_month(request, user_id):
 
 @api_view(['GET'])  # D-4 한 달 전 지출 비교
 def get_comparison_last_month(request, user_id):
-    this_month_spending = Spending.objects.filter(user_id=user_id, when__month=this_month_ago.month, is_deleted=False)
-    total_this_month_spending = total_calculation(this_month_spending)
+    total_last_month_spending = total_this_month_spending = 0
 
-    last_month_spending = Spending.objects.filter(user_id=user_id, when__month=last_month_ago.month, is_deleted=False)
-    total_last_month_spending = total_calculation(last_month_spending)
+    q = Q()
+    q.add(Q(user_id=user_id), q.OR)
+    q.add(Q(when__month=last_month_ago.month) | Q(when__month=this_month_ago.month), q.AND)
+    total_spending = Spending.objects.filter(q)
+
+    for i in total_spending:
+        if i.when.month == last_month_ago.month:
+            total_last_month_spending += i.cost
+        else:
+            total_this_month_spending += i.cost
 
     comparison_total_spending = format(total_this_month_spending - total_last_month_spending, ',')
 
