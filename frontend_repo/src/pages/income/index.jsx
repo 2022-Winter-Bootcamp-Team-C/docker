@@ -117,7 +117,13 @@ const Income = () => {
             <>
             <div className="button_postion">
                 <Button className = "ListEdit"
-                  onClick ={() => { setRow(id); handleEditShow(id); }}> 수정 </Button>
+                  onClick ={() => { 
+                    setRow(id);
+                    const result = list.filter(item => item.id == id);
+                    delete result[0].id;
+                    handleEditShow(id);
+                    setData(result[0]);
+                  }}> 수정 </Button>
                 <Button className='ListDelete'
                   onClick ={() => {
                     handleDelete(id);
