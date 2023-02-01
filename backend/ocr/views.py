@@ -66,5 +66,12 @@ def ocr_receipt(request):
 
 def save_image(files):
     img_file = files
-    filename = fs.save(img_file.name, img_file)
+    filename = "receipt_" + str(int(time.time())) + ".png"
+    filename = filename.encode('utf-8')
+    filename = fs.save(filename, img_file)
     return filename
+
+# def save_image(files):
+#     img_file = files
+#     filename = fs.save(img_file.name, img_file)
+#     return filename
