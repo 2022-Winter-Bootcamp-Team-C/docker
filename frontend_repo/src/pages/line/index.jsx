@@ -19,7 +19,7 @@ const Line = () => {
     </main>
     <div className="size">
     <Box m="20px">
-      <Header title="3개월 수입/지출 그래프" subtitle={(year + '년 '+ month + '월, ' + month+1+ '월, ' + month+2+ '월')}  />
+     <Header title="3개월 수입/지출 그래프" subtitle={('3개월 지출을 한눈에 보세요!')}  />
       <Box height="70vh" width="76vw" margin="20px">
         <LineChart />
       </Box>
