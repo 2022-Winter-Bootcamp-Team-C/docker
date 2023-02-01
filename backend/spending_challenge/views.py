@@ -15,6 +15,8 @@ from spending.models import Spending
 
 from user.models import User
 
+from spending.views import this_month_ago
+
 
 # ..spending.models
 
@@ -48,17 +50,17 @@ class post_sending_challenge_data(APIView):  # E-1 지출 챌린지 금액을 �
 
 @api_view(['GET'])  # E-2 남은 챌린지 금액 반환
 def get_remaining_budget(request, user_id):
-    challenge = Spending_challenge.objects.get(user_id=user_id)
+    challenge = Spending_challenge.objects.get(user_id=user_id, is_deleted=False)
     budget = challenge.budget
+    print(budget)
 
-    this_month = datetime.datetime.now().month
-    this_month_spending = Spending.objects.filter(user_id=user_id, when__month=this_month)
+    this_month_spending = Spending.objects.filter(user_id=user_id, is_deleted=False, when__month=this_month_ago.month)
 
     total_spending = 0
 
     for i in this_month_spending:
         total_spending += i.cost
-
+    print(total_spending)
     remaining_budget = budget - total_spending
 
     return JsonResponse({"remaining_budget": format(remaining_budget, ','), "budget": budget}, safe=False,

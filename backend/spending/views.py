@@ -182,9 +182,11 @@ def get_spending_income_ratio_3month(request, user_id):
     last_month_ago_total_spending = two_month_ago_total_spending = three_month_ago_total_spending = 0
     last_month_ago_total_income = two_month_ago_total_income = three_month_ago_total_income = 0
 
-    total_spending = Spending.objects.filter(user_id=user_id
-                                             , when__month__gte=three_month_ago.month
-                                             , when__month__lte=last_month_ago.month)
+    q = Q()
+    q.add(Q(user_id=user_id), q.OR)
+    q.add(Q(when__month=last_month_ago.month) | Q(when__month=two_month_ago.month) | Q(when__month=three_month_ago.month), q.AND)
+
+    total_spending = Spending.objects.filter(q)
 
     for i in total_spending:
         if i.when.month == last_month_ago.month:
@@ -194,9 +196,7 @@ def get_spending_income_ratio_3month(request, user_id):
         else:
             three_month_ago_total_spending += i.cost
 
-    total_income = Income.objects.filter(user_id=user_id
-                                         , when__month__gte=three_month_ago.month
-                                         , when__month__lte=last_month_ago.month)
+    total_income = Income.objects.filter(q)
 
     for i in total_income:
         if i.when.month == last_month_ago.month:
