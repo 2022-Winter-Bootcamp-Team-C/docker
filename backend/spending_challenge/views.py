@@ -39,10 +39,14 @@ class post_sending_challenge_data(APIView):  # E-1 지출 챌린지 금액을 �
             return JsonResponse({'memssage': "금액은 최대 9,999,999을 넘을 수 없거나 음수를 입력할 수 없습니다."}
                                 , safe=False, status=status.HTTP_400_BAD_REQUEST)
 
+
+
         serializer = spending_challenge_post_serializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            challenge = Spending_challenge.objects.get(user_id=request.data['user'], is_deleted=False)
+            budget = challenge.budget
+            return Response({"budget": format(budget, ',')}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -61,5 +65,5 @@ def get_remaining_budget(request, user_id):
 
     remaining_budget = budget - total_spending
 
-    return JsonResponse({"remaining_budget": format(remaining_budget, ','), "budget": budget}, safe=False,
+    return JsonResponse({"remaining_budget": format(remaining_budget, ','), "budget": format(budget, ',')}, safe=False,
                         status=status.HTTP_200_OK)
