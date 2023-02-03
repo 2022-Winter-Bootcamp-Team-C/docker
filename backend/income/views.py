@@ -43,11 +43,11 @@ def get_income_list(request, user_id):
             income_list.append({
                 "id": data.id,
                 "when": data.when,
-                "cost": data.cost,
+                "cost": format(data.cost, ','),
                 "memo": data.memo,
             })
 
-    return JsonResponse({"user_id": user_id, "income_list": income_list, 'total_cost': int(total_cost)},
+    return JsonResponse({"user_id": user_id, "income_list": income_list, 'total_cost': format(total_cost, ',')},
                         status=status.HTTP_200_OK)
 
 

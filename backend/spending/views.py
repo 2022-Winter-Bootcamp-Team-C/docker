@@ -36,12 +36,12 @@ def get_spending_datas(request, user_id):
             spending_list.append({
                 "id": spending_data.id,
                 "when": spending_data.when,
-                "cost": spending_data.cost,
+                "cost": format(spending_data.cost, ','),
                 "purpose": spending_data.purpose,
                 "memo": spending_data.memo,
             })
 
-    return JsonResponse({"user_id": user_id, "spending_list": spending_list, 'total_spending': int(total_spending)},
+    return JsonResponse({"user_id": user_id, "spending_list": spending_list, 'total_spending': format(total_spending, ',')},
                         status=status.HTTP_200_OK)
 
 
