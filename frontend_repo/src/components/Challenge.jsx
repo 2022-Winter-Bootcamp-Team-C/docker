@@ -113,7 +113,7 @@ const Challenge = () => {
         onClick={() => { totalsubmit(); window.location.reload(); }}> 확인 </Button>
         <div className="budget">
             <span>목표금액 : ₩{budget}</span>
-            <p >지출금액 : ₩{list}</p>
+            <p >남은금액 : ₩{list}</p>
         </div>
       </Box>
     </Box>

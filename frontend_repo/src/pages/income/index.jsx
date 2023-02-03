@@ -94,19 +94,19 @@ const Income = () => {
       field: "when",
       headerName: "날짜",
       flex: 1,
-      editable: true,
+      editable: false,
     },
     {
       field: "memo",
       headerName: "메모",
       flex: 1,
-      editable: true,
+      editable: false,
     },
     {
       field: "cost",
       headerName: "금액",
       flex: 1,
-      editable: true,
+      editable: false,
     },
     {
       field : 'action',
